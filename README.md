@@ -108,18 +108,24 @@ cp .env.local.example .env.local
 # Edit .env.local and paste your connection string
 ```
 
-### 3. Seed sample data (optional)
-
-```bash
-mongoimport --uri "YOUR_MONGODB_URI" --collection expenses --file seed-data.json --jsonArray
-```
-
-### 4. Run the dev server
+### 3. Run the dev server
 
 ```bash
 npm run dev
 # Open http://localhost:3000
 ```
+
+### 4. Seed sample data (optional)
+
+Start the dev server, then visit:
+
+```bash
+http://localhost:3000/api/seed
+```
+
+This will populate the database with 35 sample expenses across multiple categories and months.
+
+> Note: delete `app/api/seed/route.ts` after seeding — it is blocked in production automatically.
 
 ## Challenges Overcome
 
