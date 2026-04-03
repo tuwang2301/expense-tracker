@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import type { Expense } from "@/hooks/useExpenses";
 import { CATEGORIES } from "@/constants/categories";
+import { validateExpenseForm, type ExpenseFormData } from "@/utils/validation";
 
 interface ExpenseFormProps {
   open: boolean;
@@ -27,7 +28,7 @@ interface ExpenseFormProps {
   initialData?: Expense | null;
 }
 
-const defaultForm = {
+const defaultForm: ExpenseFormData = {
   title: "",
   category: "",
   amount: "",
@@ -41,11 +42,10 @@ export function ExpenseForm({
   onSubmit,
   initialData,
 }: ExpenseFormProps) {
-  const [form, setForm] = useState(defaultForm);
+  const [form, setForm] = useState<ExpenseFormData>(defaultForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
-  // Populate form when editing
   useEffect(() => {
     if (initialData) {
       setForm({
@@ -61,20 +61,9 @@ export function ExpenseForm({
     setErrors({});
   }, [initialData, open]);
 
-  function validate() {
-    const errs: Record<string, string> = {};
-    if (!form.title.trim()) errs.title = "Title is required";
-    if (!form.category) errs.category = "Category is required";
-    if (!form.amount || isNaN(Number(form.amount)))
-      errs.amount = "Enter a valid amount";
-    if (Number(form.amount) <= 0) errs.amount = "Amount must be greater than 0";
-    if (!form.date) errs.date = "Date is required";
-    return errs;
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const errs = validate();
+    const errs = validateExpenseForm(form);
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
       return;

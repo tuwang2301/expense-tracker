@@ -18,15 +18,15 @@ import { formatCurrency } from "@/utils/format";
 
 type View = "dashboard" | "expenses" | "analytics";
 
-function now() {
+const getCurrentMonth = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
+};
 
 export default function Home() {
   const [view, setView] = useState<View>("dashboard");
   const [category, setCategory] = useState("all");
-  const [month, setMonth] = useState(now());
+  const [month, setMonth] = useState(getCurrentMonth());
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [collapsed, setCollapsed] = useState(false);
