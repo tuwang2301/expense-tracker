@@ -15,10 +15,14 @@ export async function GET(req: NextRequest) {
     interface ExpenseFilter {
       category?: string;
       date?: { $gte: Date; $lt: Date };
+<<<<<<< HEAD
       $or?: Array<
         | { title: { $regex: string; $options: string } }
         | { description: { $regex: string; $options: string } }
       >;
+=======
+      $or?: Array<{ title: { $regex: string; $options: string } } | { description: { $regex: string; $options: string } }>;
+>>>>>>> 5b172626aa9bcd785949846176ad50b6534632a1
     }
 
     const filter: ExpenseFilter = {};
