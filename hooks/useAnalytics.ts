@@ -14,24 +14,25 @@ export function useAnalytics(year?: number) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchAnalytics = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = year ? `?year=${year}` : "";
+      const res = await fetch(`/api/analytics${params}`);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error);
+      setData(json.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load analytics");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchAnalytics = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const params = year ? `?year=${year}` : "";
-        const res = await fetch(`/api/analytics${params}`);
-        const json = await res.json();
-        if (!json.success) throw new Error(json.error);
-        setData(json.data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load analytics");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchAnalytics();
   }, [year]);
 
-  return { data, loading, error };
+  return { data, loading, error, fetchAnalytics };
 }

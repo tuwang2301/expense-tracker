@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toast";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { Geist } from "next/font/google";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Spendy — Expense Tracker",
@@ -19,10 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={cn(GeistSans.variable, GeistMono.variable, "font-sans", geist.variable)}
-    >
+    <html lang="en" className={cn(inter.variable, "font-sans")}>
       <body className="font-sans antialiased">
         {children}
         <Toaster />

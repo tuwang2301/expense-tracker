@@ -3,8 +3,19 @@
 import { useState } from "react";
 import { Pencil, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { getCategoryMeta, formatCurrency, formatDate } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { getCategoryMeta } from "@/constants/categories";
+import { formatCurrency, formatDate } from "@/utils/format";
 import type { Expense } from "@/hooks/useExpenses";
 
 interface ExpenseTableProps {
@@ -22,41 +33,71 @@ function SkeletonRow() {
     <tr className="border-b border-border/50">
       {[1, 2, 3, 4, 5].map((i) => (
         <td key={i} className="px-4 py-3">
-          <div className="h-4 bg-muted rounded animate-pulse" style={{ width: `${60 + i * 8}%` }} />
+          <div
+            className="h-4 bg-muted rounded animate-pulse"
+            style={{ width: `${60 + i * 8}%` }}
+          />
         </td>
       ))}
     </tr>
   );
 }
 
-export function ExpenseTable({ expenses, loading, onEdit, onDelete }: ExpenseTableProps) {
-  const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: "date", dir: "desc" });
+export function ExpenseTable({
+  expenses,
+  loading,
+  onEdit,
+  onDelete,
+}: ExpenseTableProps) {
+  const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({
+    key: "date",
+    dir: "desc",
+  });
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   function toggleSort(key: SortKey) {
-    setSort((s) => ({ key, dir: s.key === key && s.dir === "desc" ? "asc" : "desc" }));
+    setSort((s) => ({
+      key,
+      dir: s.key === key && s.dir === "desc" ? "asc" : "desc",
+    }));
   }
 
   const sorted = [...expenses].sort((a, b) => {
     const mult = sort.dir === "asc" ? 1 : -1;
-    if (sort.key === "date") return mult * (new Date(a.date).getTime() - new Date(b.date).getTime());
+    if (sort.key === "date")
+      return mult * (new Date(a.date).getTime() - new Date(b.date).getTime());
     if (sort.key === "amount") return mult * (a.amount - b.amount);
     if (sort.key === "title") return mult * a.title.localeCompare(b.title);
-    if (sort.key === "category") return mult * a.category.localeCompare(b.category);
+    if (sort.key === "category")
+      return mult * a.category.localeCompare(b.category);
     return 0;
   });
 
   async function handleDelete(id: string) {
     setDeletingId(id);
-    try { await onDelete(id); } finally { setDeletingId(null); }
+    try {
+      await onDelete(id);
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   function SortIcon({ col }: { col: SortKey }) {
     if (sort.key !== col) return <ChevronUp className="h-3 w-3 opacity-20" />;
-    return sort.dir === "asc" ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />;
+    return sort.dir === "asc" ? (
+      <ChevronUp className="h-3 w-3" />
+    ) : (
+      <ChevronDown className="h-3 w-3" />
+    );
   }
 
-  function SortTh({ col, children }: { col: SortKey; children: React.ReactNode }) {
+  function SortTh({
+    col,
+    children,
+  }: {
+    col: SortKey;
+    children: React.ReactNode;
+  }) {
     return (
       <th
         className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer select-none hover:text-foreground transition-colors"
@@ -89,7 +130,9 @@ export function ExpenseTable({ expenses, loading, onEdit, onDelete }: ExpenseTab
             <SortTh col="category">Category</SortTh>
             <SortTh col="amount">Amount</SortTh>
             <SortTh col="date">Date</SortTh>
-            <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Note</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              Note
+            </th>
             <th className="px-4 py-3 w-20" />
           </tr>
         </thead>
@@ -103,7 +146,9 @@ export function ExpenseTable({ expenses, loading, onEdit, onDelete }: ExpenseTab
                     key={expense._id}
                     className="border-b border-border/40 hover:bg-muted/30 transition-colors group"
                   >
-                    <td className="px-4 py-3 font-medium max-w-[180px] truncate">{expense.title}</td>
+                    <td className="px-4 py-3 font-medium max-w-[180px] truncate">
+                      {expense.title}
+                    </td>
                     <td className="px-4 py-3">
                       <span
                         className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
@@ -113,10 +158,16 @@ export function ExpenseTable({ expenses, loading, onEdit, onDelete }: ExpenseTab
                         <span>{cat.label}</span>
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-semibold tabular-nums">{formatCurrency(expense.amount)}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{formatDate(expense.date)}</td>
+                    <td className="px-4 py-3 font-semibold tabular-nums">
+                      {formatCurrency(expense.amount)}
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {formatDate(expense.date)}
+                    </td>
                     <td className="px-4 py-3 text-muted-foreground max-w-[160px] truncate">
-                      {expense.description || <span className="opacity-30">—</span>}
+                      {expense.description || (
+                        <span className="opacity-30">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -130,15 +181,23 @@ export function ExpenseTable({ expenses, loading, onEdit, onDelete }: ExpenseTab
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 hover:text-destructive hover:bg-destructive/10">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7 hover:text-destructive hover:bg-destructive/10"
+                            >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>Delete expense?</AlertDialogTitle>
+                              <AlertDialogTitle>
+                                Delete expense?
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                &quot;{expense.title}&quot; ({formatCurrency(expense.amount)}) will be permanently deleted.
+                                &quot;{expense.title}&quot; (
+                                {formatCurrency(expense.amount)}) will be
+                                permanently deleted.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -147,7 +206,9 @@ export function ExpenseTable({ expenses, loading, onEdit, onDelete }: ExpenseTab
                                 onClick={() => handleDelete(expense._id)}
                                 disabled={deletingId === expense._id}
                               >
-                                {deletingId === expense._id ? "Deleting..." : "Delete"}
+                                {deletingId === expense._id
+                                  ? "Deleting..."
+                                  : "Delete"}
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>

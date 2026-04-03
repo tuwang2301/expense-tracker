@@ -50,7 +50,11 @@ export default function Home() {
     updateExpense,
     deleteExpense,
   } = useExpenses(filters);
-  const { data: analytics, loading: anaLoading } = useAnalytics();
+  const {
+    data: analytics,
+    loading: anaLoading,
+    fetchAnalytics,
+  } = useAnalytics();
 
   // Recent 6 for dashboard
   const recent = useMemo(() => expenses.slice(0, 8), [expenses]);
@@ -67,15 +71,18 @@ export default function Home() {
   async function handleSubmit(data: Omit<Expense, "_id" | "createdAt">) {
     if (editTarget) {
       await updateExpense(editTarget._id, data);
+      fetchAnalytics(); // Refresh analytics after editing an expense
       toast("Expense updated", "success");
     } else {
       await createExpense(data);
+      fetchAnalytics(); // Refresh analytics after adding new expense
       toast("Expense added", "success");
     }
   }
 
   async function handleDelete(id: string) {
     await deleteExpense(id);
+    fetchAnalytics(); // Refresh analytics after deleting an expense
     toast("Expense deleted", "success");
   }
 
@@ -133,7 +140,10 @@ export default function Home() {
                 </div>
               </form>
             )}
-            <Button size="sm" onClick={openAdd} className="gap-1.5">
+            <Button
+              onClick={openAdd}
+              className="gap-1.5 hover:bg-transparent hover:text-primary"
+            >
               <Plus className="h-4 w-4" />
               Add Expense
             </Button>
@@ -154,7 +164,7 @@ export default function Home() {
                     <h2 className="text-sm font-semibold">Recent Expenses</h2>
                     <Button
                       onClick={() => setView("expenses")}
-                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-xs hover:bg-transparent hover:text-primary"
                     >
                       View all →
                     </Button>
@@ -235,7 +245,7 @@ export default function Home() {
                       Current year breakdown
                     </p>
                   </div>
-                  <div className="p-5">
+                  <div className="p-5 flex justify-center items-center h-full">
                     <MonthlyChart analytics={analytics} loading={anaLoading} />
                   </div>
                 </div>

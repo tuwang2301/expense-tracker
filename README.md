@@ -8,14 +8,14 @@ Managing personal finances is tedious when expenses are scattered across bank ap
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | Next.js 14 (App Router), React 18 |
-| **Styling** | Tailwind CSS, shadcn/ui (Radix UI primitives) |
-| **Charts** | Recharts |
-| **Backend** | Next.js API Routes (serverless) |
-| **Database** | MongoDB Atlas via Mongoose ODM |
-| **Deployment** | Vercel (recommended) |
+| Layer          | Technology                                    |
+| -------------- | --------------------------------------------- |
+| **Frontend**   | Next.js 14 (App Router), React 18             |
+| **Styling**    | Tailwind CSS, shadcn/ui (Radix UI primitives) |
+| **Charts**     | Recharts                                      |
+| **Backend**    | Next.js API Routes (serverless)               |
+| **Database**   | MongoDB Atlas via Mongoose ODM                |
+| **Deployment** | Vercel (recommended)                          |
 
 ## Features
 
@@ -44,36 +44,46 @@ expense-tracker/
 │   │   ├── expenses/
 │   │   │   ├── route.ts          # GET (list + filter) / POST (create)
 │   │   │   └── [id]/route.ts     # GET / PUT (update) / DELETE
-│   │   └── analytics/
-│   │       └── route.ts          # Aggregated stats for charts
+│   │   ├── analytics/
+│   │   │   └── route.ts          # Aggregated stats for charts
 │   ├── globals.css               # Tailwind base + CSS variables
-│   ├── layout.tsx                # Root layout with font and Toaster
+│   ├── layout.tsx                # Root layout with fonts and Toaster
 │   └── page.tsx                  # Main SPA shell — all views rendered here
 ├── components/
-│   ├── ui/                       # Reusable primitives (Button, Input, Dialog, etc.)
+│   ├── ui/                       # Reusable primitives (shadcn/ui + Radix UI)
+│   │   ├── alert-dialog.tsx
 │   │   ├── button.tsx
+│   │   ├── dialog.tsx
 │   │   ├── input.tsx
 │   │   ├── label.tsx
 │   │   ├── select.tsx
-│   │   ├── dialog.tsx
-│   │   ├── alert-dialog.tsx
+│   │   ├── sonner.tsx
 │   │   └── toast.tsx
 │   ├── Sidebar.tsx               # Navigation + category filter + month picker
 │   ├── StatCards.tsx             # Dashboard KPI cards
 │   ├── ExpenseTable.tsx          # Sortable table with inline edit/delete
 │   ├── ExpenseForm.tsx           # Add/Edit modal form
-│   ├── CategoryChart.tsx         # Progress-bar category breakdown
+│   ├── CategoryChart.tsx         # Category breakdown with progress bars
 │   └── MonthlyChart.tsx          # Recharts bar chart
+├── constants/
+│   └── categories.ts             # Category definitions (emoji, colors, labels)
 ├── hooks/
 │   ├── useExpenses.ts            # CRUD operations + filter state
 │   └── useAnalytics.ts           # Analytics data fetching
 ├── lib/
 │   ├── mongodb.ts                # Mongoose connection with hot-reload cache
-│   └── utils.ts                  # cn(), CATEGORIES config, formatters
+│   └── utils.ts                  # Utility functions (cn, classname helpers)
 ├── models/
 │   └── Expense.ts                # Mongoose schema + model
-├── seed-data.json                # Sample data for MongoDB import
-├── .env.local.example            # Environment variable template
+├── utils/
+│   └── format.ts                 # Currency & date formatters
+├── components.json               # shadcn/ui configuration
+├── next.config.mjs               # Next.js configuration
+├── postcss.config.js             # PostCSS configuration (for Tailwind)
+├── tailwind.config.js            # Tailwind CSS configuration
+├── tsconfig.json                 # TypeScript configuration
+├── package.json                  # Dependencies & scripts
+├── seed-data.json                # Sample MongoDB data
 └── README.md
 ```
 
