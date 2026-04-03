@@ -12,8 +12,13 @@ export async function GET(req: NextRequest) {
     const month = searchParams.get("month"); // format: "2025-03"
     const search = searchParams.get("search");
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const filter: any = {};
+    interface ExpenseFilter {
+      category?: string;
+      date?: { $gte: Date; $lt: Date };
+      $or?: Array<{ title: { $regex: string; $options: string } } | { description: { $regex: string; $options: string } }>;
+    }
+
+    const filter: ExpenseFilter = {};
 
     if (category && category !== "all") filter.category = category;
 

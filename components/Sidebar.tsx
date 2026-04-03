@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { addMonths, format, parse } from "date-fns";
 import { cn } from "@/lib/utils";
 import { CATEGORIES } from "@/constants/categories";
 
@@ -29,23 +30,12 @@ const NAV = [
   { id: "analytics" as View, label: "Analytics", icon: BarChart2 },
 ];
 
-function prevMonth(ym: string) {
-  const [y, m] = ym.split("-").map(Number);
-  const d = new Date(y, m - 2, 1);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-function nextMonth(ym: string) {
-  const [y, m] = ym.split("-").map(Number);
-  const d = new Date(y, m, 1);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-function fmtMonth(ym: string) {
-  const [y, m] = ym.split("-").map(Number);
-  return new Date(y, m - 1).toLocaleDateString("en-AU", {
-    month: "long",
-    year: "numeric",
-  });
-}
+const monthToDate = (ym: string) => parse(ym, "yyyy-MM", new Date());
+const dateToMonth = (d: Date) => format(d, "yyyy-MM");
+
+const prevMonth = (ym: string) => dateToMonth(addMonths(monthToDate(ym), -1));
+const nextMonth = (ym: string) => dateToMonth(addMonths(monthToDate(ym), 1));
+const fmtMonth = (ym: string) => format(monthToDate(ym), "MMMM yyyy");
 
 export function Sidebar({
   activeView,
