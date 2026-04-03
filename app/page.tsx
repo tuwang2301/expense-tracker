@@ -12,8 +12,9 @@ import { ExpenseTable } from "@/components/ExpenseTable";
 import { ExpenseForm } from "@/components/ExpenseForm";
 import { useExpenses, type Expense } from "@/hooks/useExpenses";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { formatCurrency, CATEGORIES } from "@/lib/utils";
 import { toast } from "@/components/ui/toast";
+import { CATEGORIES } from "@/constants/categories";
+import { formatCurrency } from "@/utils/format";
 
 type View = "dashboard" | "expenses" | "analytics";
 
@@ -151,12 +152,12 @@ export default function Home() {
                 <div className="lg:col-span-2 bg-card border border-border/50 rounded-xl overflow-hidden">
                   <div className="flex items-center justify-between px-5 py-4 border-b border-border/50">
                     <h2 className="text-sm font-semibold">Recent Expenses</h2>
-                    <button
+                    <Button
                       onClick={() => setView("expenses")}
                       className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                     >
                       View all →
-                    </button>
+                    </Button>
                   </div>
                   <ExpenseTable
                     expenses={recent}

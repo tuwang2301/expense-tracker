@@ -1,7 +1,8 @@
 "use client";
 
-import { getCategoryMeta, formatCurrency } from "@/lib/utils";
 import type { AnalyticsData } from "@/hooks/useAnalytics";
+import { getCategoryMeta } from "@/constants/categories";
+import { formatCurrency } from "@/utils/format";
 
 interface CategoryChartProps {
   analytics: AnalyticsData | null;
@@ -47,9 +48,13 @@ export function CategoryChart({ analytics, loading }: CategoryChartProps) {
               <span className="flex items-center gap-2">
                 <span>{cat.emoji}</span>
                 <span className="font-medium">{cat.label}</span>
-                <span className="text-xs text-muted-foreground">{item.count} txn</span>
+                <span className="text-xs text-muted-foreground">
+                  {item.count} txn
+                </span>
               </span>
-              <span className="font-medium tabular-nums">{formatCurrency(item.total)}</span>
+              <span className="font-medium tabular-nums">
+                {formatCurrency(item.total)}
+              </span>
             </div>
             <div className="h-1.5 bg-muted rounded-full overflow-hidden">
               <div
@@ -57,7 +62,9 @@ export function CategoryChart({ analytics, loading }: CategoryChartProps) {
                 style={{ width: `${pct}%`, backgroundColor: cat.color }}
               />
             </div>
-            <p className="text-xs text-muted-foreground text-right">{pct.toFixed(1)}%</p>
+            <p className="text-xs text-muted-foreground text-right">
+              {pct.toFixed(1)}%
+            </p>
           </div>
         );
       })}

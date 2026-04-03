@@ -1,8 +1,16 @@
 "use client";
 
-import { TrendingUp, TrendingDown, Minus, Receipt, CalendarDays, BarChart3 } from "lucide-react";
-import { formatCurrency, getCategoryMeta } from "@/lib/utils";
+import {
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  Receipt,
+  CalendarDays,
+  BarChart3,
+} from "lucide-react";
 import type { AnalyticsData } from "@/hooks/useAnalytics";
+import { getCategoryMeta } from "@/constants/categories";
+import { formatCurrency } from "@/utils/format";
 
 interface StatCardsProps {
   analytics: AnalyticsData | null;
@@ -25,22 +33,28 @@ function StatCard({
   return (
     <div className="bg-card border border-border/50 rounded-xl p-5 flex flex-col gap-3 animate-fade-up">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{label}</span>
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          {label}
+        </span>
         <span className="text-muted-foreground/50">{icon}</span>
       </div>
       <div>
         <p className="text-2xl font-semibold tracking-tight">{value}</p>
         <div className="flex items-center gap-1 mt-1">
           {trend === "up" && <TrendingUp className="h-3 w-3 text-rose-500" />}
-          {trend === "down" && <TrendingDown className="h-3 w-3 text-emerald-500" />}
-          {trend === "neutral" && <Minus className="h-3 w-3 text-muted-foreground" />}
+          {trend === "down" && (
+            <TrendingDown className="h-3 w-3 text-emerald-500" />
+          )}
+          {trend === "neutral" && (
+            <Minus className="h-3 w-3 text-muted-foreground" />
+          )}
           <span
             className={
               trend === "up"
                 ? "text-xs text-rose-500"
                 : trend === "down"
-                ? "text-xs text-emerald-500"
-                : "text-xs text-muted-foreground"
+                  ? "text-xs text-emerald-500"
+                  : "text-xs text-muted-foreground"
             }
           >
             {sub}
@@ -62,11 +76,14 @@ function SkeletonCard() {
 }
 
 export function StatCards({ analytics, loading }: StatCardsProps) {
-  if (loading) return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    );
 
   const current = analytics?.currentMonth.total ?? 0;
   const last = analytics?.lastMonth.total ?? 0;
@@ -79,7 +96,11 @@ export function StatCards({ analytics, loading }: StatCardsProps) {
       <StatCard
         label="This month"
         value={formatCurrency(current)}
-        sub={last > 0 ? `${pctChange > 0 ? "+" : ""}${pctChange.toFixed(1)}% vs last month` : "No prior data"}
+        sub={
+          last > 0
+            ? `${pctChange > 0 ? "+" : ""}${pctChange.toFixed(1)}% vs last month`
+            : "No prior data"
+        }
         trend={pctChange > 0 ? "up" : pctChange < 0 ? "down" : "neutral"}
         icon={<Receipt className="h-4 w-4" />}
       />
