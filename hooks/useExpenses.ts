@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/components/ui/toast";
 import { useState, useEffect, useCallback } from "react";
 
 export interface Expense {
@@ -28,7 +29,8 @@ export function useExpenses(filters: ExpenseFilters = {}) {
     setError(null);
     try {
       const params = new URLSearchParams();
-      if (filters.category && filters.category !== "all") params.set("category", filters.category);
+      if (filters.category && filters.category !== "all")
+        params.set("category", filters.category);
       if (filters.month) params.set("month", filters.month);
       if (filters.search) params.set("search", filters.search);
 
@@ -39,6 +41,7 @@ export function useExpenses(filters: ExpenseFilters = {}) {
       setExpenses(json.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load expenses");
+      toast("Error loading expenses", "error");
     } finally {
       setLoading(false);
     }
@@ -79,5 +82,13 @@ export function useExpenses(filters: ExpenseFilters = {}) {
     await fetchExpenses();
   };
 
-  return { expenses, loading, error, refetch: fetchExpenses, createExpense, updateExpense, deleteExpense };
+  return {
+    expenses,
+    loading,
+    error,
+    refetch: fetchExpenses,
+    createExpense,
+    updateExpense,
+    deleteExpense,
+  };
 }
